@@ -3,22 +3,36 @@ import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
 
-import { Button, Container, Center } from "@mantine/core";
+import ReactDOM from "react-dom/client";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import Home from "./pages/Home.jsx";
+import MainPage from "./pages/MainPage.jsx";
+
+// import {
+//   Container,
+//   Button,
+//   Center,
+//   TextInput,
+//   PasswordInput,
+//   Text,
+//   Flex,
+//   Stack
+// } from "@mantine/core";
+// import { useDisclosure } from '@mantine/hooks';
 
 function App() {
   return (
-    <>
-      <Center
-        m={"auto"}
-        bg="var(--mantine-color-blue-light)"
-        w={700}
-        h={700}
-      >
-        <Button variant="filled" color="pink">
-          Button
-        </Button>
-      </Center>
-    </>
+    <Home>
+        <MainPage/>
+    </Home>
+
+    // <BrowserRouter>
+    // <Routes>
+    // <Route path="/" element={<Home />} />
+    // </Routes>
+
+    // </BrowserRouter>
   );
 }
 
