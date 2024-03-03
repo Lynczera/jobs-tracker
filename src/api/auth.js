@@ -1,7 +1,12 @@
-export default async function handler(req, res){
-    const {method} = req;
+import axios from "axios";
 
-    if (method === "GET") {
-        
-      }
+const Auth = {
+
+    check_user: async()=>{
+        const res = await axios.get("/auth");
+        return await res;
+    }
+
 }
+
+export default Auth;

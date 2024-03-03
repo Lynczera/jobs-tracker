@@ -1,6 +1,7 @@
 import { useState } from "react";
+import axios from "axios";
 import MainPage from "./MainPage";
-import { Outlet, Link, Route,Router, useNavigate } from "react-router-dom";
+import { Outlet, Link, Route, Router, useNavigate } from "react-router-dom";
 import {
   Container,
   Button,
@@ -9,11 +10,12 @@ import {
   PasswordInput,
   Text,
   Flex,
-  Stack
+  Stack,
 } from "@mantine/core";
-import { useDisclosure } from '@mantine/hooks';
+import { useDisclosure } from "@mantine/hooks";
+import Auth from "../api/Auth";
 
-function Home({children}) {
+function Home({ children }) {
   const [isSignup, setIsSignup] = useState(false);
   const [visible, { toggle }] = useDisclosure(false);
   const [user, setUser] = useState("Leo");
@@ -21,12 +23,20 @@ function Home({children}) {
 
   const nav = useNavigate();
 
-  function authenticate (){
+  function authenticate() {
+    testServer();
     nav("/MainPage");
   }
-  
+
+  async function testServer() {
+    console.log("calling server");
+    const {data} = await Auth.check_user(); 
+    console.log(data);
+
+  }
+
   return (
-  <>
+    <>
       <Container
         size={"responsive"}
         mt={200}
@@ -68,7 +78,6 @@ function Home({children}) {
                 w={200}
               />
             </Stack>
-
           ) : (
             <PasswordInput
               label="Password"
@@ -76,7 +85,9 @@ function Home({children}) {
             />
           )}
 
-          <Button onClick={()=>authenticate()}>{isSignup? "Signup" : "Login"}</Button>
+          <Button onClick={() => authenticate()}>
+            {isSignup ? "Signup" : "Login"}
+          </Button>
           <Button
             onClick={() => (isSignup ? setIsSignup(false) : setIsSignup(true))}
           >

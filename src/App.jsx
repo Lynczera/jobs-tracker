@@ -8,7 +8,9 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import Home from "./pages/Home.jsx";
 import MainPage from "./pages/MainPage.jsx";
+import axios from "axios";
 
+axios.defaults.baseURL = "http://localhost:3000"
 // import {
 //   Container,
 //   Button,
