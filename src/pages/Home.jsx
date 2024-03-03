@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Outlet, Link, Route,Router } from "react-router-dom";
+import MainPage from "./MainPage";
+import { Outlet, Link, Route,Router, useNavigate } from "react-router-dom";
 import {
   Container,
   Button,
@@ -15,12 +16,17 @@ import { useDisclosure } from '@mantine/hooks';
 function Home({children}) {
   const [isSignup, setIsSignup] = useState(false);
   const [visible, { toggle }] = useDisclosure(false);
+  const [user, setUser] = useState("Leo");
+  const [password, setPassword] = useState("12345");
 
-  const [ isAuth, setAuth ] = useState(false);
+  const nav = useNavigate();
 
+  function authenticate (){
+    nav("/MainPage");
+  }
   
-  return (!isAuth?
-    (<>
+  return (
+  <>
       <Container
         size={"responsive"}
         mt={200}
@@ -70,7 +76,7 @@ function Home({children}) {
             />
           )}
 
-          <Button onClick={()=>setAuth(true)}>{isSignup? "Signup" : "Login"}</Button>
+          <Button onClick={()=>authenticate()}>{isSignup? "Signup" : "Login"}</Button>
           <Button
             onClick={() => (isSignup ? setIsSignup(false) : setIsSignup(true))}
           >
@@ -78,7 +84,7 @@ function Home({children}) {
           </Button>
         </Flex>
       </Container>
-    </>):(<div>{children}</div>)
+    </>
   );
 }
 

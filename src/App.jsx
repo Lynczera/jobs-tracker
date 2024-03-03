@@ -4,7 +4,7 @@ import viteLogo from "/vite.svg";
 import "./App.css";
 
 import ReactDOM from "react-dom/client";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import Home from "./pages/Home.jsx";
 import MainPage from "./pages/MainPage.jsx";
@@ -23,16 +23,24 @@ import MainPage from "./pages/MainPage.jsx";
 
 function App() {
   return (
-    <Home>
-        <MainPage/>
-    </Home>
+    // <Home> </Home>
 
-    // <BrowserRouter>
-    // <Routes>
-    // <Route path="/" element={<Home />} />
-    // </Routes>
-
-    // </BrowserRouter>
+    <BrowserRouter>
+      <Routes>
+        <Route
+          path="/"
+          element={<Home />}
+        />
+        <Route
+          path="/login"
+          element={<Home />}
+        />
+        <Route
+          path="MainPage"
+          element={<MainPage />}
+        />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
