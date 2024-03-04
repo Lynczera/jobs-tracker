@@ -81,7 +81,7 @@ function Home({ children }) {
     }
 
     if (allFilled) {
-      const { data } = await User.create_user();
+      const { data } = await User.create_user(user);
       console.log(data);
     }
   }

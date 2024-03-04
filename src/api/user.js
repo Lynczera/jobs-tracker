@@ -7,8 +7,11 @@ const User = {
         return await res;
     },
 
-    create_user: async()=>{
-        const res = await axios.get("/users/create");
+    create_user: async(user)=>{
+        // const res = await axios.get("/users/create");
+        const res = await axios.post("/users/create", {
+            username : user
+        })
         return await res;
     }
 
