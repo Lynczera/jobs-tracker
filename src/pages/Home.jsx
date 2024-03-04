@@ -79,8 +79,9 @@ function Home({ children }) {
       setConfPassError("Passwords must match");
       allFilled = false;
     }
-    
 
+
+    
     if (allFilled) {
       const { data } = await User.create_user(user);
       console.log(data);
