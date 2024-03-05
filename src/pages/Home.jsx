@@ -35,7 +35,7 @@ function Home({ children }) {
     setConfPassError(null);
   }
 
-  async function authenticate() {
+  async function loginUser() {
     setUserError(null);
     setPassError(null);
     setConfPassError(null);
@@ -48,13 +48,19 @@ function Home({ children }) {
       setPassError("Password required");
       allFilled = false;
     }
-    if(allFilled){
-      console.log("All filled");
+    if (allFilled) {
+      const  data  = await User.login_user(user, password);
+      const {login} = data.data;
+
+      if(login){
+        nav('/MainPage');
+      }else{
+        setPassError("Wrong password or username");
+        setUserError("Wrong password or username");
+
+      }
+      console.log(login);
     }
-    // console.log("Authenticating");
-    // console.log("calling server");
-    // const { data } = await User.check_user();
-    // console.log(data);
   }
 
   async function createUser() {
@@ -80,13 +86,27 @@ function Home({ children }) {
       allFilled = false;
     }
 
-
-    
     if (allFilled) {
-      const { data } = await User.create_user(user);
+      const { data } = await User.create_user(user, password);
       console.log(data);
+
+      if (data["created"]) {
+        setIsSignup(false);
+      } else {
+        if (data["error"] === 1062) {
+          setUserError("Username already exists");
+        }
+      }
     }
   }
+
+  // async function checkSession() {
+  //   console.log("testing cookie");
+  //   const data = await User.auth_user();
+  //   const { sID } = data.data;
+  //   const { auth } = data.data;
+  //   return auth;
+  // }
 
   // async function testServer() {
   //   console.log("calling server");
@@ -94,79 +114,87 @@ function Home({ children }) {
   //   console.log(data);
 
   // }
+  // async function testCookie() {
+  //   console.log("testing cookie");
+  //   const data = await User.auth_user();
+  //   const {sID} = data.data;
+  //   const {auth} = data.data;
+
+  //   console.log(data.data);
+
+    
+  //   // console.log(cookie);    // const cookie = cookie.load('sID');
+  // }
+
 
   return (
-    <>
-      {/* <Container
-        size={"responsive"}
-        mt={200}
-        mx={300}
-        bg="var(--mantine-color-blue-light)"
-        p={50}
-      > */}
-      <Flex
-        mih={50}
-        gap="md"
-        justify="center"
-        align="center"
-        direction="column"
-        wrap="wrap"
-        mt={200}
-      >
-        <Text
-          size="xl"
-          fw={900}
-        >
-          {isSignup ? "Register" : "Login"}
-        </Text>
-        <TextInput
-          label="Username"
-          withAsterisk
-          w={200}
-          error={userError}
-          onChange={(e) => setUser(e.target.value)}
-        />
 
-        {isSignup ? (
-          <Stack>
+        <Flex
+          mih={50}
+          gap="md"
+          justify="center"
+          align="center"
+          direction="column"
+          wrap="wrap"
+          mt={200}
+        >
+          <Text
+            size="xl"
+            fw={900}
+          >
+            {isSignup ? "Register" : "Login"}
+          </Text>
+          <TextInput
+            label="Username"
+            withAsterisk
+            w={200}
+            error={userError}
+            onChange={(e) => setUser(e.target.value)}
+          />
+
+          {isSignup ? (
+            <Stack>
+              <PasswordInput
+                error={passError}
+                withAsterisk
+                label="Password"
+                visible={visible}
+                onVisibilityChange={toggle}
+                onChange={(e) => setPassword(e.target.value)}
+                w={200}
+              />
+              <PasswordInput
+                error={confPassError}
+                withAsterisk
+                label="Confirm password"
+                visible={visible}
+                onVisibilityChange={toggle}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                w={200}
+              />
+            </Stack>
+          ) : (
             <PasswordInput
-              error={passError}
               withAsterisk
               label="Password"
-              visible={visible}
-              onVisibilityChange={toggle}
+              error={passError}
               onChange={(e) => setPassword(e.target.value)}
               w={200}
             />
-            <PasswordInput
-              error={confPassError}
-              withAsterisk
-              label="Confirm password"
-              visible={visible}
-              onVisibilityChange={toggle}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              w={200}
-            />
-          </Stack>
-        ) : (
-          <PasswordInput
-            withAsterisk
-            label="Password"
-            error={passError}
-            onChange={(e) => setPassword(e.target.value)}
-            w={200}
-          />
-        )}
+          )}
 
-        <Button onClick={isSignup ? createUser : authenticate}>
-          {isSignup ? "Signup" : "Login"}
-        </Button>
-        <Button onClick={switchUserMode}>
-          {isSignup ? "Member already" : "I'm new"}
-        </Button>
-      </Flex>
-      {/* </Container> */}
-    </>
+          <Button onClick={isSignup ? createUser : loginUser}>
+            {isSignup ? "Signup" : "Login"}
+          </Button>
+          <Button onClick={switchUserMode}>
+            {isSignup ? "Member already" : "I'm new"}
+          </Button>
+          {/* <Button onClick={testCookie}>
+            Test Cookie
+          </Button> */}
+        </Flex>
+
+
   );
 }
 

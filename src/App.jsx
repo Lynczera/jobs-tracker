@@ -10,7 +10,11 @@ import Home from "./pages/Home.jsx";
 import MainPage from "./pages/MainPage.jsx";
 import axios from "axios";
 
-axios.defaults.baseURL = "http://localhost:3000"
+axios.defaults.baseURL = "http://localhost:3000";
+axios.defaults.withCredentials = true;
+
+
+
 // import {
 //   Container,
 //   Button,

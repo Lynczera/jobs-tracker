@@ -7,11 +7,26 @@ const User = {
         return await res;
     },
 
-    create_user: async(user)=>{
+    create_user: async(user, password)=>{
         // const res = await axios.get("/users/create");
         const res = await axios.post("/users/create", {
-            username : user
+            username : user,
+            password : password
         })
+        return await res;
+    },
+
+    login_user: async(user, password)=>{
+        const res = await axios.post("/users/login", {
+            username : user,
+            password : password
+        })
+        return await res;
+    },
+
+    auth_user: async()=>{
+        
+        const res = await axios.get(`/users/auth`)
         return await res;
     }
 
