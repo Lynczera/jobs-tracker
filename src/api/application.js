@@ -1,12 +1,23 @@
-import axios, { Axios } from "axios";
+import axios from "axios";
+
+import cheerio from "cheerio";
 
 const Application = {
 
-    add_app: async()=>{
-        //grab job
-        //add job 
-        console.log("App");
+    add_app: async(jID, date, status)=>{
+        const data = await axios.post("/applications/add_app", {
+            jID,
+            date,
+            status
+        })
 
+        return data.data;
+
+    },
+
+    get_apps: async()=>{
+        const data = await axios.get("/applications/apps");
+        return data.data;
 
     }
 }
