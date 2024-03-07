@@ -28,6 +28,11 @@ const User = {
         
         const res = await axios.get(`/users/auth`)
         return await res;
+    },
+
+    logout_user: async()=>{
+        const res = await axios.get('/users/logout');
+        return await res.data.logout;
     }
 
 }
