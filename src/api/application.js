@@ -19,6 +19,13 @@ const Application = {
         const data = await axios.get("/applications/apps");
         return data.data;
 
+    },
+
+    remove_apps: async(apps)=>{
+        const data = await axios.post("/applications/remove", {
+            apps
+        });
+        return data.data;
     }
 }
 

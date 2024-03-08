@@ -59,7 +59,6 @@ function Home({ children }) {
         setUserError("Wrong password or username");
 
       }
-      console.log(login);
     }
   }
 
@@ -88,7 +87,6 @@ function Home({ children }) {
 
     if (allFilled) {
       const { data } = await User.create_user(user, password);
-      console.log(data);
 
       if (data["created"]) {
         setIsSignup(false);
@@ -99,33 +97,6 @@ function Home({ children }) {
       }
     }
   }
-
-  // async function checkSession() {
-  //   console.log("testing cookie");
-  //   const data = await User.auth_user();
-  //   const { sID } = data.data;
-  //   const { auth } = data.data;
-  //   return auth;
-  // }
-
-  // async function testServer() {
-  //   console.log("calling server");
-  //   const {data} = await Auth.check_user();
-  //   console.log(data);
-
-  // }
-  // async function testCookie() {
-  //   console.log("testing cookie");
-  //   const data = await User.auth_user();
-  //   const {sID} = data.data;
-  //   const {auth} = data.data;
-
-  //   console.log(data.data);
-
-    
-  //   // console.log(cookie);    // const cookie = cookie.load('sID');
-  // }
-
 
   return (
 
@@ -189,9 +160,6 @@ function Home({ children }) {
           <Button onClick={switchUserMode}>
             {isSignup ? "Member already" : "I'm new"}
           </Button>
-          {/* <Button onClick={testCookie}>
-            Test Cookie
-          </Button> */}
         </Flex>
 
 

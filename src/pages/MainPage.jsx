@@ -7,6 +7,7 @@ import {
   Text,
   TextInput,
   Table,
+  Checkbox,
 } from "@mantine/core";
 import { Container } from "@mantine/core";
 import { useEffect, useState } from "react";
@@ -33,6 +34,9 @@ export default function MainPage() {
   const [appStatus, setappStatus] = useState("");
 
   const [applications, setApps] = useState([]);
+
+  const [removing, setRemoving] = useState(false);
+  const [toRemove, setToRemoving] = useState([]);
 
   async function authenticate() {
     const data = await User.auth_user();
@@ -68,7 +72,7 @@ export default function MainPage() {
 
   async function addApp() {
     const data = await Application.add_app(jobID, appDate, appStatus);
-    const { title, company } = await data;
+    const { title, company, status } = await data;
     if (title) {
       close();
       setjID_err(null);
@@ -89,8 +93,39 @@ export default function MainPage() {
   //   })
   // },[]);
 
+  function startRmv() {
+    if (removing) {
+      setRemoving(false);
+      setToRemoving([]);
+    } else {
+      setRemoving(true);
+    }
+  }
+
+  async function removeApps() {
+    setRemoving(false);
+    setToRemoving([]);
+    const data = await Application.remove_apps(toRemove);
+    if (data == "removed") {
+      updateApps();
+    } else {
+      console.log(data);
+    }
+  }
+
   const rows = applications.map((element) => (
     <Table.Tr key={element.JobID}>
+      <Table.Td>
+        {removing ? (
+          <Checkbox
+            onChange={(event) => {
+              event.currentTarget.checked
+                ? setToRemoving([...toRemove, element.JobID])
+                : setRemoving(toRemove.filter((e) => e != element.JobID));
+            }}
+          />
+        ) : null}
+      </Table.Td>
       <Table.Td>{element.JobID}</Table.Td>
       <Table.Td>{element.Date.split("T")[0]}</Table.Td>
       <Table.Td>{element.Title}</Table.Td>
@@ -121,9 +156,13 @@ export default function MainPage() {
             justify="flex-end"
             align="center"
             direction="row"
-            wrap="wrap"
+            wrap="nowrap"
             m={10}
           >
+            {removing ? <Button onClick={removeApps}>Confirm</Button> : null}
+            <Button onClick={startRmv}>
+              {removing ? "Cancel" : "Remove Application"}
+            </Button>
             <Button onClick={open}>Add Application</Button>
             <Button onClick={logout}>Logout</Button>
           </Flex>
@@ -175,6 +214,7 @@ export default function MainPage() {
         <Table>
           <Table.Thead>
             <Table.Tr>
+              <Table.Th></Table.Th>
               <Table.Th>Job ID</Table.Th>
               <Table.Th>Date Applied</Table.Th>
               <Table.Th>Job Title</Table.Th>
