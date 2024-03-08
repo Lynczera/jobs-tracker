@@ -18,7 +18,7 @@ const User = {
 
     login_user: async(user, password)=>{
         const res = await axios.post("/users/login", {
-            username : user,
+            username : user.trimEnd(),
             password : password
         })
         return await res;
