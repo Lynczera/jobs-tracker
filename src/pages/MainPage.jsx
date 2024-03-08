@@ -8,6 +8,7 @@ import {
   TextInput,
   Table,
   Checkbox,
+  Input
 } from "@mantine/core";
 import { Container } from "@mantine/core";
 import { useEffect, useState } from "react";
@@ -27,9 +28,11 @@ export default function MainPage() {
   const [user, setUser] = useState("");
 
   const [appDate, setappDate] = useState(null);
-  const [jobID, setjobID] = useState("");
+  const [jobID, setjobID] = useState(null);
 
   const [jID_err, setjID_err] = useState(null);
+  const [date_err, setdate_err] = useState(null);
+
 
   const [appStatus, setappStatus] = useState("");
 
@@ -37,6 +40,13 @@ export default function MainPage() {
 
   const [removing, setRemoving] = useState(false);
   const [toRemove, setToRemoving] = useState([]);
+
+  const [isEditing, setisEditing] = useState(false);
+
+  const [selectedRow, setSelectedRow] = useState(null);
+
+  const [editStatus, seteditStatus] = useState("");
+
 
   async function authenticate() {
     const data = await User.auth_user();
@@ -68,18 +78,36 @@ export default function MainPage() {
   function closeModal() {
     close();
     setjID_err(null);
+    setdate_err(null);
+    setappDate(null);
+    setjobID(null);
+    setappStatus(null);
   }
 
   async function addApp() {
-    const data = await Application.add_app(jobID, appDate, appStatus);
-    const { title, company, status } = await data;
-    if (title) {
-      close();
-      setjID_err(null);
-      updateApps();
-    } else {
-      setjID_err("Job doesn't exist");
+    setjID_err(null);
+    setdate_err(null);
+    var allfilled = true;
+    if(!jobID || jobID.trimEnd()== ""){
+      setjID_err("Job ID required");
+      allfilled = false;
     }
+    if(!appDate){
+      setdate_err("Date required");
+      allfilled=false;
+    }
+
+    if(allfilled){
+      const data = await Application.add_app(jobID, appDate, appStatus);
+      const { title, company, status } = await data;
+      if (title) {
+        closeModal();
+        updateApps();
+      } else {
+        setjID_err("Job doesn't exist");
+      }
+    }
+
   }
 
   useEffect(() => {
@@ -113,6 +141,21 @@ export default function MainPage() {
     }
   }
 
+  function startEdit(ele,curr_status) {
+    setisEditing(true);
+    setSelectedRow(ele);
+    seteditStatus(curr_status);
+
+  }
+
+  async function updateApp(job){
+    setisEditing(false);
+    const data = await Application.update_apps(job, editStatus);
+    if(data){
+      updateApps();
+    }
+  }
+
   const rows = applications.map((element) => (
     <Table.Tr key={element.JobID}>
       <Table.Td>
@@ -130,7 +173,19 @@ export default function MainPage() {
       <Table.Td>{element.Date.split("T")[0]}</Table.Td>
       <Table.Td>{element.Title}</Table.Td>
       <Table.Td>{element.Company}</Table.Td>
-      <Table.Td>{element.Status}</Table.Td>
+      <Table.Td>{(selectedRow == element.JobID && isEditing)? (
+        <Input w={80} onChange={(e)=>seteditStatus(e.target.value)} placeholder={element.Status} />
+
+      ): (element.Status)}</Table.Td>
+      <Table.Td>
+        {(selectedRow == element.JobID && isEditing) ? (
+          <Container m={0} p={0}>
+            <Button onClick={()=>updateApp(element.JobID)}>Confirm</Button> <Button onClick={()=>setisEditing(false)}>Cancel</Button>
+          </Container>
+        ) : (
+          <Button onClick={()=>startEdit(element.JobID,element.Status)}>Edit Status</Button>
+        )}
+      </Table.Td>
     </Table.Tr>
   ));
 
@@ -193,7 +248,7 @@ export default function MainPage() {
 
           <DateInput
             withAsterisk
-            value={appDate}
+            error={date_err}
             onChange={setappDate}
             label="Date"
           />
@@ -220,6 +275,7 @@ export default function MainPage() {
               <Table.Th>Job Title</Table.Th>
               <Table.Th>Company</Table.Th>
               <Table.Th>Status</Table.Th>
+              <Table.Th></Table.Th>
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>{rows}</Table.Tbody>
