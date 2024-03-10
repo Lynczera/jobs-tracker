@@ -99,7 +99,7 @@ export default function MainPage() {
 
     if(allfilled){
       const data = await Application.add_app(jobID, appDate, appStatus);
-      const { title, company, status } = await data;
+      const { title } = await data;
       if (title) {
         closeModal();
         updateApps();
@@ -114,12 +114,7 @@ export default function MainPage() {
     authenticate();
   }, [location]);
 
-  // useEffect(()=>{
-  //   const data = Application.get_apps();
-  //   Application.get_apps().then((response)=>{
-  //     setApps(response);
-  //   })
-  // },[]);
+
 
   function startRmv() {
     if (removing) {
@@ -133,12 +128,15 @@ export default function MainPage() {
   async function removeApps() {
     setRemoving(false);
     setToRemoving([]);
-    const data = await Application.remove_apps(toRemove);
-    if (data == "removed") {
-      updateApps();
-    } else {
-      console.log(data);
+    if(toRemove.length>0){
+      const data = await Application.remove_apps(toRemove);
+      if (data == "removed") {
+        updateApps();
+      } else {
+        console.log(data);
+      }
     }
+
   }
 
   function startEdit(ele,curr_status) {
@@ -164,7 +162,7 @@ export default function MainPage() {
             onChange={(event) => {
               event.currentTarget.checked
                 ? setToRemoving([...toRemove, element.JobID])
-                : setRemoving(toRemove.filter((e) => e != element.JobID));
+                : setToRemoving(toRemove.filter((e) => e !== element.JobID));
             }}
           />
         ) : null}
@@ -179,9 +177,9 @@ export default function MainPage() {
       ): (element.Status)}</Table.Td>
       <Table.Td>
         {(selectedRow == element.JobID && isEditing) ? (
-          <Container m={0} p={0}>
+          <Flex gap={"xs"}>
             <Button onClick={()=>updateApp(element.JobID)}>Confirm</Button> <Button onClick={()=>setisEditing(false)}>Cancel</Button>
-          </Container>
+          </Flex>
         ) : (
           <Button onClick={()=>startEdit(element.JobID,element.Status)}>Edit Status</Button>
         )}
@@ -230,7 +228,7 @@ export default function MainPage() {
         justify="center"
         align="center"
         direction="column"
-        wrap="wrap"
+        m={20}
       >
         <Title order={2}>Jobs Tracker</Title>
 
@@ -266,7 +264,7 @@ export default function MainPage() {
           </Button>
         </Modal>
 
-        <Table>
+        <Table withTableBorder="true" > 
           <Table.Thead>
             <Table.Tr>
               <Table.Th></Table.Th>
@@ -281,6 +279,7 @@ export default function MainPage() {
           <Table.Tbody>{rows}</Table.Tbody>
         </Table>
       </Flex>
+      
     </div>
   );
 }

@@ -51,7 +51,6 @@ function Home({ children }) {
     if (allFilled) {
       const  data  = await User.login_user(user, password);
       const {login} = data.data;
-      console.log(data);
       if(login){
         nav('/MainPage');
       }else{
