@@ -8,7 +8,7 @@ import {
   TextInput,
   Table,
   Checkbox,
-  Input
+  Input,
 } from "@mantine/core";
 import { Container } from "@mantine/core";
 import { useEffect, useState } from "react";
@@ -33,7 +33,6 @@ export default function MainPage() {
   const [jID_err, setjID_err] = useState(null);
   const [date_err, setdate_err] = useState(null);
 
-
   const [appStatus, setappStatus] = useState("");
 
   const [applications, setApps] = useState([]);
@@ -46,7 +45,6 @@ export default function MainPage() {
   const [selectedRow, setSelectedRow] = useState(null);
 
   const [editStatus, seteditStatus] = useState("");
-
 
   async function authenticate() {
     const data = await User.auth_user();
@@ -88,16 +86,16 @@ export default function MainPage() {
     setjID_err(null);
     setdate_err(null);
     var allfilled = true;
-    if(!jobID || jobID.trimEnd()== ""){
+    if (!jobID || jobID.trimEnd() == "") {
       setjID_err("Job ID required");
       allfilled = false;
     }
-    if(!appDate){
+    if (!appDate) {
       setdate_err("Date required");
-      allfilled=false;
+      allfilled = false;
     }
 
-    if(allfilled){
+    if (allfilled) {
       const data = await Application.add_app(jobID, appDate, appStatus);
       const { title } = await data;
       if (title) {
@@ -107,14 +105,11 @@ export default function MainPage() {
         setjID_err("Job doesn't exist");
       }
     }
-
   }
 
   useEffect(() => {
     authenticate();
   }, [location]);
-
-
 
   function startRmv() {
     if (removing) {
@@ -128,7 +123,7 @@ export default function MainPage() {
   async function removeApps() {
     setRemoving(false);
     setToRemoving([]);
-    if(toRemove.length>0){
+    if (toRemove.length > 0) {
       const data = await Application.remove_apps(toRemove);
       if (data == "removed") {
         updateApps();
@@ -136,20 +131,18 @@ export default function MainPage() {
         console.log(data);
       }
     }
-
   }
 
-  function startEdit(ele,curr_status) {
+  function startEdit(ele, curr_status) {
     setisEditing(true);
     setSelectedRow(ele);
     seteditStatus(curr_status);
-
   }
 
-  async function updateApp(job){
+  async function updateApp(job) {
     setisEditing(false);
     const data = await Application.update_apps(job, editStatus);
-    if(data){
+    if (data) {
       updateApps();
     }
   }
@@ -171,17 +164,27 @@ export default function MainPage() {
       <Table.Td>{element.Date.split("T")[0]}</Table.Td>
       <Table.Td>{element.Title}</Table.Td>
       <Table.Td>{element.Company}</Table.Td>
-      <Table.Td>{(selectedRow == element.JobID && isEditing)? (
-        <Input w={80} onChange={(e)=>seteditStatus(e.target.value)} placeholder={element.Status} />
-
-      ): (element.Status)}</Table.Td>
       <Table.Td>
-        {(selectedRow == element.JobID && isEditing) ? (
+        {selectedRow == element.JobID && isEditing ? (
+          <Input
+            w={80}
+            onChange={(e) => seteditStatus(e.target.value)}
+            placeholder={element.Status}
+          />
+        ) : (
+          element.Status
+        )}
+      </Table.Td>
+      <Table.Td>
+        {selectedRow == element.JobID && isEditing ? (
           <Flex gap={"xs"}>
-            <Button onClick={()=>updateApp(element.JobID)}>Confirm</Button> <Button onClick={()=>setisEditing(false)}>Cancel</Button>
+            <Button onClick={() => updateApp(element.JobID)}>Confirm</Button>{" "}
+            <Button onClick={() => setisEditing(false)}>Cancel</Button>
           </Flex>
         ) : (
-          <Button onClick={()=>startEdit(element.JobID,element.Status)}>Edit Status</Button>
+          <Button onClick={() => startEdit(element.JobID, element.Status)}>
+            Edit Status
+          </Button>
         )}
       </Table.Td>
     </Table.Tr>
@@ -232,11 +235,7 @@ export default function MainPage() {
       >
         <Title order={2}>Jobs Tracker</Title>
 
-        <Modal
-          opened={opened}
-          onClose={closeModal}
-          title="Add Application"
-        >
+        <Modal opened={opened} onClose={closeModal} title="Add Application">
           <TextInput
             label="Job ID"
             withAsterisk
@@ -256,15 +255,12 @@ export default function MainPage() {
             onChange={(e) => setappStatus(e.target.value)}
           />
 
-          <Button
-            mt={10}
-            onClick={addApp}
-          >
+          <Button mt={10} onClick={addApp}>
             Submit
           </Button>
         </Modal>
 
-        <Table withTableBorder="true" > 
+        <Table withTableBorder="true">
           <Table.Thead>
             <Table.Tr>
               <Table.Th></Table.Th>
@@ -279,7 +275,6 @@ export default function MainPage() {
           <Table.Tbody>{rows}</Table.Tbody>
         </Table>
       </Flex>
-      
     </div>
   );
 }
