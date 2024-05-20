@@ -20,16 +20,17 @@ const Application = {
 
   remove_apps: async (apps) => {
     const data = await axios.post("/applications/remove", {
-      apps,
+      apps
     });
     return data.data;
   },
   update_apps: async (job, status) => {
+    console.log("test")
+
     const data = await axios.post("/applications/update_app", {
       job,
       status,
     });
-
     return data;
   },
 };

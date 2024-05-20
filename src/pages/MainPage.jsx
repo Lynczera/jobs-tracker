@@ -10,7 +10,6 @@ import {
   Checkbox,
   Input,
 } from "@mantine/core";
-import { Container } from "@mantine/core";
 import { useEffect, useState } from "react";
 import User from "../api/user";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -58,7 +57,6 @@ export default function MainPage() {
   }
 
   async function updateApps() {
-    const data = Application.get_apps();
     Application.get_apps().then((response) => {
       setApps(response);
     });
@@ -140,8 +138,10 @@ export default function MainPage() {
   }
 
   async function updateApp(job) {
+    console.log("updating")
     setisEditing(false);
     const data = await Application.update_apps(job, editStatus);
+    console.log(data)
     if (data) {
       updateApps();
     }

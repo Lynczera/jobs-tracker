@@ -3,9 +3,7 @@ import axios from "axios";
 import MainPage from "./MainPage";
 import { Outlet, Link, Route, Router, useNavigate } from "react-router-dom";
 import {
-  Container,
   Button,
-  Center,
   TextInput,
   PasswordInput,
   Text,
@@ -15,7 +13,7 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import User from "../api/user";
 
-function Home({ children }) {
+function Home() {
   const [isSignup, setIsSignup] = useState(false);
   const [visible, { toggle }] = useDisclosure(false);
   const [user, setUser] = useState("");
@@ -160,8 +158,6 @@ function Home({ children }) {
             {isSignup ? "Member already" : "I'm new"}
           </Button>
         </Flex>
-
-
   );
 }
 

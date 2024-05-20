@@ -8,7 +8,6 @@ const User = {
     },
 
     create_user: async(user, password)=>{
-        // const res = await axios.get("/users/create");
         const res = await axios.post("/users/create", {
             username : user,
             password : password
