@@ -1,7 +1,5 @@
 import axios from "axios";
 
-import cheerio from "cheerio";
-
 const Application = {
   add_app: async (jID, date, status) => {
     const data = await axios.post("/applications/add_app", {
@@ -25,7 +23,6 @@ const Application = {
     return data.data;
   },
   update_apps: async (job, status) => {
-    console.log("test")
 
     const data = await axios.post("/applications/update_app", {
       job,
