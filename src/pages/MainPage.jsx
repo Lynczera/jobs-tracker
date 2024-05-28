@@ -202,7 +202,7 @@ export default function MainPage() {
             direction="row"
             wrap="wrap"
           >
-            <Text size="lg">{`Hello ${user}`}</Text>
+            <Text size="lg">{`Hello, ${user}!`}</Text>
           </Flex>
         </Grid.Col>
 
